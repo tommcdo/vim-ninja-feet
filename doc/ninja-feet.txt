@@ -1,0 +1,51 @@
+*ninja-feet.txt*  Strike from the cursor to either end of a text object
+
+Author: Tom McDonald <http://tommcdo.com>
+License: Same terms as Vim itself (see |license|)
+
+This plugin is only available if 'compatible' is not set.
+
+INTRODUCTION                                    *ninja-feet*
+
+ninja-feet.vim provides the means to operator from the cursor to either
+the beginning or end of a text object.
+
+The mappings presently only work in |Operator-pending| mode.
+
+MAPPINGS                                        *ninja-feet-mappings*
+
+                                                *o_[* *ninja-left-foot*
+{operator}[{motion}     Perform {operator} from the cursor to the beginning
+                        of the text object defined by {motion}. Only text
+                        object motions (starting with `i` or `a`) are valid.
+
+
+                                                *o_[* *ninja-left-foot*
+{operator}]{motion}     Perform {operator} from the cursor to the end of the
+                        text object defined by {motion}. Only text object
+                        motions (starting with `i` or `a`) are valid.
+
+
+EXAMPLES                                        *ninja-feet-examples*
+
+    d]i(                Delete from the cursor to the end of a parenthetical
+                        term.
+
+    c[a"                Change from the cursor to the beginning of a quoted
+                        string (including the `"` character).
+
+ninja-feet.vim can also work with custom operators and text objects. Consider
+the following example using lion.vim (https://github.com/tommcdo/vim-lion) and
+dentures.vim (https://github.com/qstrahl/vim-dentures):
+
+    gl]ip=              Align from the cursor to the end of the paragraph by
+                        the `=` character.
+
+Caution: Only a true ninja can steal a lion's dentures.
+
+ISSUES AND TODO                                 *ninja-feet-issues*
+                                                *ninja-feet-todo*
+
+See https://github.com/tommcdo/vim-ninja-feet/issues for bugs and issues.
+
+ vim:tw=78:ts=8:ft=help:norl:
