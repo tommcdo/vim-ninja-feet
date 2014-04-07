@@ -20,7 +20,7 @@ MAPPINGS                                        *ninja-feet-mappings*
                         object motions (starting with `i` or `a`) are valid.
 
 
-                                                *o_[* *ninja-left-foot*
+                                                *o_]* *ninja-right-foot*
 {operator}]{motion}     Perform {operator} from the cursor to the end of the
                         text object defined by {motion}. Only text object
                         motions (starting with `i` or `a`) are valid.
