@@ -3,7 +3,7 @@ ninja-feet.vim
 
 In [Practical Vim][1] by [Drew Neil][2], a [cute illustration][3] outlines the
 difference between Vim's standard motions and text objects. In short, we see a
-ninja kicking in one direciton (a motion) compared to a ninja kicking in two
+ninja kicking in one direction (a motion) compared to a ninja kicking in two
 directions (a text object).
 
 While Vim has a great number of wonderful text objects, and plugins can add
