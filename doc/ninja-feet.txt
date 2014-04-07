@@ -38,7 +38,7 @@ ninja-feet.vim can also work with custom operators and text objects. Consider
 the following example using lion.vim (https://github.com/tommcdo/vim-lion) and
 dentures.vim (https://github.com/qstrahl/vim-dentures):
 
-    gl]ip=              Align from the cursor to the end of the paragraph by
+    gl]ii=              Align from the cursor to the end of the indent block by
                         the `=` character.
 
 Caution: Only a true ninja can steal a lion's dentures.
