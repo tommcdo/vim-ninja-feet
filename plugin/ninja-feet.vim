@@ -27,11 +27,28 @@ function! s:ninja_strike(mode)
 	call feedkeys(s:operator.mode.s:direction)
 endfunction
 
-onoremap <silent> <Plug>(ninja-left-foot-inner) <Esc>:<C-U>call <SID>ninja_prepare('i', '[')<CR>:<C-U>set operatorfunc=<SID>ninja_strike<CR>g@
-onoremap <silent> <Plug>(ninja-left-foot-a) <Esc>:<C-U>call <SID>ninja_prepare('a', '[')<CR>:<C-U>set operatorfunc=<SID>ninja_strike<CR>g@
-onoremap <silent> <Plug>(ninja-right-foot-inner) <Esc>:<C-U>call <SID>ninja_prepare('i', ']')<CR>:<C-U>set operatorfunc=<SID>ninja_strike<CR>g@
-onoremap <silent> <Plug>(ninja-right-foot-a) <Esc>:<C-U>call <SID>ninja_prepare('a', ']')<CR>:<C-U>set operatorfunc=<SID>ninja_strike<CR>g@
-omap [i <Plug>(ninja-left-foot-inner)
-omap [a <Plug>(ninja-left-foot-a)
-omap ]i <Plug>(ninja-right-foot-inner)
-omap ]a <Plug>(ninja-right-foot-a)
+function! s:map_expr(sid, type, direction)
+	let map = ''
+	let map .= "\<Esc>"
+	let map .= ":\<C-U>call ".a:sid."ninja_prepare('".a:type."', '".a:direction."')\<CR>"
+	let map .= ":\<C-U>set operatorfunc=".a:sid."ninja_strike\<CR>g@"
+	return map
+endfunction
+
+function! s:map(lhs, rhs, mode)
+	if !hasmapto(a:rhs, a:mode)
+		execute a:mode.'map '.a:lhs.' '.a:rhs
+	endif
+endfunction
+
+onoremap <silent> <expr> <Plug>(ninja-left-foot-inner)  <SID>map_expr("<SID>", 'a', '[')
+onoremap <silent> <expr> <Plug>(ninja-left-foot-a)      <SID>map_expr("<SID>", 'a', '[')
+onoremap <silent> <expr> <Plug>(ninja-right-foot-inner) <SID>map_expr("<SID>", 'i', ']')
+onoremap <silent> <expr> <Plug>(ninja-right-foot-a)     <SID>map_expr("<SID>", 'a', ']')
+
+if !exists('g:ninja_feet_no_mappings')
+	call s:map('[i', "<Plug>(ninja-left-foot-inner)", 'o')
+	call s:map('[a', "<Plug>(ninja-left-foot-a)", 'o')
+	call s:map(']i', "<Plug>(ninja-right-foot-inner)", 'o')
+	call s:map(']a', "<Plug>(ninja-right-foot-a)", 'o')
+endif
