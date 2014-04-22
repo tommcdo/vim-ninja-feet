@@ -27,6 +27,16 @@ function! s:ninja_strike(mode)
 	call feedkeys(s:operator.mode.s:direction)
 endfunction
 
+function! s:ninja_insert(mode)
+	let op = a:mode == 'line' ? 'O' : 'i'
+	call feedkeys('`['.op, 'n')
+endfunction
+
+function! s:ninja_append(mode)
+	let op = a:mode == 'line' ? 'o' : 'a'
+	call feedkeys('`]'.op, 'n')
+endfunction
+
 function! s:map_expr(sid, type, direction)
 	let map = ''
 	let map .= "\<Esc>"
@@ -46,9 +56,15 @@ onoremap <silent> <expr> <Plug>(ninja-left-foot-a)      <SID>map_expr("<SID>", '
 onoremap <silent> <expr> <Plug>(ninja-right-foot-inner) <SID>map_expr("<SID>", 'i', ']')
 onoremap <silent> <expr> <Plug>(ninja-right-foot-a)     <SID>map_expr("<SID>", 'a', ']')
 
+nnoremap <silent> <Plug>(ninja-insert) :<C-U>set operatorfunc=<SID>ninja_insert<CR>g@
+nnoremap <silent> <Plug>(ninja-append) :<C-U>set operatorfunc=<SID>ninja_append<CR>g@
+
 if !exists('g:ninja_feet_no_mappings')
 	call s:map('[i', "<Plug>(ninja-left-foot-inner)", 'o')
 	call s:map('[a', "<Plug>(ninja-left-foot-a)", 'o')
 	call s:map(']i', "<Plug>(ninja-right-foot-inner)", 'o')
 	call s:map(']a', "<Plug>(ninja-right-foot-a)", 'o')
+
+	call s:map('z[', "<Plug>(ninja-insert)", 'n')
+	call s:map('z]', "<Plug>(ninja-append)", 'n')
 endif

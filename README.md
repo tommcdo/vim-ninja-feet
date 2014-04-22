@@ -17,6 +17,9 @@ the operator and the text object. For example, `d]i)` deletes from the cursor
 to the end of the current parenthetical term. `c[ip` changes from the cursor to
 the beginning of the paragraph.
 
+You can also jump into Insert mode at the beginning or end of a text object
+(technically, any motion) with `z[` and `z]`.
+
 [1]: http://pragprog.com/book/dnvim/practical-vim
 [2]: http://drewneil.com/
 [3]: https://twitter.com/odcmmot/status/432254338925617152

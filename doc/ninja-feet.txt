@@ -25,6 +25,17 @@ MAPPINGS                                        *ninja-feet-mappings*
                         text object defined by {motion}. Only text object
                         motions (starting with `i` or `a`) are valid.
 
+                                                *z[* *ninja-insert*
+z[{motion}              Enter |Insert| mode at the beginning of {motion}. For
+                        |characterwise| motions, this is like pressing `i`;
+                        for |linewise| motions, this is like pressing `O`.
+
+
+                                                *z]* *ninja-append*
+z]{motion}              Enter |Insert| mode at the end of {motion}. For
+                        |characterwise| motions, this is like pressing `a`;
+                        for |linewise| motions, this is like pressing `o`.
+
 
 EXAMPLES                                        *ninja-feet-examples*
 
@@ -33,6 +44,12 @@ EXAMPLES                                        *ninja-feet-examples*
 
     c[a"                Change from the cursor to the beginning of a quoted
                         string (including the `"` character).
+
+    z[ip                Enter Insert mode on a new line at the beginning of
+                        a paragraph.
+
+    z]at                Enter Insert mode after the current closing tag (in
+                        XML or HTML).
 
 ninja-feet.vim can also work with custom operators and text objects. Consider
 the following example using lion.vim (https://github.com/tommcdo/vim-lion) and
