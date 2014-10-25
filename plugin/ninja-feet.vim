@@ -1,9 +1,9 @@
-function! s:ninja_prepare(mode, direction)
+function! s:ninja_prepare(mode, direction, count)
 	let s:direction = a:direction
 	let s:operator = v:operator
 	let s:cursor_pos = getpos('.')
 	let s:operatorfunc = &operatorfunc
-	call feedkeys(a:mode)
+	call feedkeys(a:count.a:mode)
 endfunction
 
 function! s:ninja_strike(mode)
@@ -37,10 +37,10 @@ function! s:ninja_append(mode)
 	call feedkeys('`]'.op, 'n')
 endfunction
 
-function! s:map_expr(sid, type, direction)
+function! s:map_expr(sid, type, direction, count)
 	let map = ''
 	let map .= "\<Esc>"
-	let map .= ":\<C-U>call ".a:sid."ninja_prepare('".a:type."', '".a:direction."')\<CR>"
+	let map .= ":\<C-U>call ".a:sid."ninja_prepare('".a:type."', '".a:direction."', '".a:count."')\<CR>"
 	let map .= ":\<C-U>set operatorfunc=".a:sid."ninja_strike\<CR>g@"
 	return map
 endfunction
@@ -51,10 +51,10 @@ function! s:map(lhs, rhs, mode)
 	endif
 endfunction
 
-onoremap <silent> <expr> <Plug>(ninja-left-foot-inner)  <SID>map_expr("<SID>", 'i', '[')
-onoremap <silent> <expr> <Plug>(ninja-left-foot-a)      <SID>map_expr("<SID>", 'a', '[')
-onoremap <silent> <expr> <Plug>(ninja-right-foot-inner) <SID>map_expr("<SID>", 'i', ']')
-onoremap <silent> <expr> <Plug>(ninja-right-foot-a)     <SID>map_expr("<SID>", 'a', ']')
+onoremap <silent> <expr> <Plug>(ninja-left-foot-inner)  <SID>map_expr("<SID>", 'i', '[', v:count)
+onoremap <silent> <expr> <Plug>(ninja-left-foot-a)      <SID>map_expr("<SID>", 'a', '[', v:count)
+onoremap <silent> <expr> <Plug>(ninja-right-foot-inner) <SID>map_expr("<SID>", 'i', ']', v:count)
+onoremap <silent> <expr> <Plug>(ninja-right-foot-a)     <SID>map_expr("<SID>", 'a', ']', v:count)
 
 nnoremap <silent> <Plug>(ninja-insert) :<C-U>set operatorfunc=<SID>ninja_insert<CR>g@
 nnoremap <silent> <Plug>(ninja-append) :<C-U>set operatorfunc=<SID>ninja_append<CR>g@

@@ -15,13 +15,15 @@ The mappings presently only work in |Operator-pending| mode.
 MAPPINGS                                        *ninja-feet-mappings*
 
                                                 *o_[* *ninja-left-foot*
-{operator}[{motion}     Perform {operator} from the cursor to the beginning
+{operator}[count][{motion}
+                        Perform {operator} from the cursor to the beginning
                         of the text object defined by {motion}. Only text
                         object motions (starting with `i` or `a`) are valid.
 
 
                                                 *o_]* *ninja-right-foot*
-{operator}]{motion}     Perform {operator} from the cursor to the end of the
+{operator}[count]]{motion}
+                        Perform {operator} from the cursor to the end of the
                         text object defined by {motion}. Only text object
                         motions (starting with `i` or `a`) are valid.
 
