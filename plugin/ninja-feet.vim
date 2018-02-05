@@ -51,8 +51,10 @@ function! s:map(lhs, rhs, mode)
 	endif
 endfunction
 
+onoremap <silent> <expr> <Plug>(ninja-left-foot)        <SID>map_expr("<SID>", '', '[', v:count1)
 onoremap <silent> <expr> <Plug>(ninja-left-foot-inner)  <SID>map_expr("<SID>", 'i', '[', v:count1)
 onoremap <silent> <expr> <Plug>(ninja-left-foot-a)      <SID>map_expr("<SID>", 'a', '[', v:count1)
+onoremap <silent> <expr> <Plug>(ninja-right-foot)       <SID>map_expr("<SID>", '', ']', v:count1)
 onoremap <silent> <expr> <Plug>(ninja-right-foot-inner) <SID>map_expr("<SID>", 'i', ']', v:count1)
 onoremap <silent> <expr> <Plug>(ninja-right-foot-a)     <SID>map_expr("<SID>", 'a', ']', v:count1)
 
