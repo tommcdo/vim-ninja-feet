@@ -1,6 +1,7 @@
 function! s:ninja_prepare(mode, direction, count)
 	let s:direction = a:direction
 	let s:operator = v:operator
+	let s:register = '"' . v:register
 	let s:cursor_pos = getpos('.')
 	let s:operatorfunc = &operatorfunc
 	call feedkeys(a:count.a:mode)
@@ -24,7 +25,7 @@ function! s:ninja_strike(mode)
 			call setpos("'".s:direction, pos)
 		endif
 	endif
-	call feedkeys(s:operator.mode.s:direction)
+	call feedkeys(s:register.s:operator.mode.s:direction, 'n')
 endfunction
 
 function! s:ninja_insert(mode)
