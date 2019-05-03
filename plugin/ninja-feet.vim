@@ -25,8 +25,17 @@ function! s:ninja_strike(mode)
 			call setpos("'".s:direction, pos)
 		endif
 	endif
+	" `s:register`, here, might not be the same as the current active register.
+	" Upon feeding the keys, however, s:register would overtake as the active
+	" register. To get around that:
+	" 1 - first record the active register,
+	let active_register = v:register
+	" 2 - feed the keys with the recorded `s:register`,
 	call feedkeys(s:register.s:operator.mode.s:direction, 'n')
+	" 3 - then re-active the active register recorded on 1.
+	call feedkeys('"' . active_register . "\<Plug>NINJAFEET_ResetActiveRegister")
 endfunction
+nnoremap <silent> <Plug>NINJAFEET_ResetActiveRegister <nop>
 
 function! s:ninja_insert(mode)
 	let op = a:mode == 'line' ? 'O' : 'i'
