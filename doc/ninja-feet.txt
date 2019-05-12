@@ -53,6 +53,8 @@ EXAMPLES                                        *ninja-feet-examples*
     z]at                Enter Insert mode after the current closing tag (in
                         XML or HTML).
 
+CUSTOM OPERATORS AND TEXT OBJECTS       *ninja-custom-operators-and-objects*
+
 ninja-feet.vim can also work with custom operators and text objects. Consider
 the following example using lion.vim (https://github.com/tommcdo/vim-lion) and
 dentures.vim (https://github.com/qstrahl/vim-dentures):
@@ -61,6 +63,16 @@ dentures.vim (https://github.com/qstrahl/vim-dentures):
                         the `=` character.
 
 Caution: Only a true ninja can steal a lion's dentures.
+
+Note if the custom text object does not start with an `i` and/or `a` and you
+want to use it with ninja.vim, you have to make it explicitly available.
+For example, the custom text object for comments provided by vim-commentary
+(https://github.com/tpope/vim-commentary) is `gc`. By default `d[gc` does not
+work. Add following two lines to your vimrc to define the ninja versions of
+`gc` >
+
+    omap [gc <Plug>(ninja-left-foot)gc
+    omap ]gc <Plug>(ninja-right-foot)gc
 
 ISSUES AND TODO                                 *ninja-feet-issues*
                                                 *ninja-feet-todo*
