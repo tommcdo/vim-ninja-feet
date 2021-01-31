@@ -10,21 +10,20 @@ function! s:ninja_strike(mode)
 	call setpos('.', s:cursor_pos)
 	let &operatorfunc = s:operatorfunc
 	let mode = a:mode == 'line' ? "'" : "`"
+	let inclusive_toggle = ''
 	if s:direction == ']'
 		" Manually adjust for inclusive behaviour.
-		" TODO: Find a cleaner solution
 		let pos = getpos("'".s:direction)
-		if mode == '`' && pos[2] == strlen(getline(pos[1]))
-			" End marks end of line. Just use $.
-			let mode = ''
-			let s:direction = '$'
+		if a:mode != 'line' && pos[2] == strlen(getline(pos[1]))
+			" Use inclusive behavior
+			let inclusive_toggle = 'v'
 		else
 			" Add one to the mark column position
 			let pos[2] = pos[2] + 1
 			call setpos("'".s:direction, pos)
 		endif
 	endif
-	call feedkeys(s:operator.mode.s:direction)
+	call feedkeys(s:operator.inclusive_toggle.mode.s:direction)
 endfunction
 
 function! s:ninja_insert(mode)
