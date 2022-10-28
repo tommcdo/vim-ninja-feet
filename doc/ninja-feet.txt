@@ -77,6 +77,9 @@ work. Add following two lines to your vimrc to define the ninja versions of
 ISSUES AND TODO                                 *ninja-feet-issues*
                                                 *ninja-feet-todo*
 
+All operators, including custom operators, support repeating via |.| except for
+|c| and |!|. The |z[| and |z]| operators also do not support being repeated.
+
 See https://github.com/tommcdo/vim-ninja-feet/issues for bugs and issues.
 
  vim:tw=78:ts=8:ft=help:norl:

@@ -1,66 +1,70 @@
-function! s:ninja_prepare(mode, direction, count)
-	let s:direction = a:direction
-	let s:operator = v:operator
-	let s:cursor_pos = getpos('.')
-	let s:operatorfunc = &operatorfunc
-	call feedkeys(a:count.a:mode)
-endfunction
+" Keep track of the current cursor position in the active buffer
+au CursorMoved,InsertLeave,BufEnter * let s:curpos = getpos('.')
 
-function! s:ninja_strike(mode)
-	call setpos('.', s:cursor_pos)
-	let &operatorfunc = s:operatorfunc
+fun! s:ninja_strike(direction, operator, opfunc, mode)
 	let mode = a:mode == 'line' ? "'" : "`"
+	let reg = v:register == '"' ? '' : '"'.v:register
 	let inclusive_toggle = ''
-	if s:direction == ']'
-		" Manually adjust for inclusive behaviour.
-		let pos = getpos("'".s:direction)
-		if a:mode != 'line' && pos[2] == strlen(getline(pos[1]))
-			" Use inclusive behavior
-			let inclusive_toggle = 'v'
-		else
-			" Add one to the mark column position
-			let pos[2] = pos[2] + 1
-			call setpos("'".s:direction, pos)
-		endif
-	endif
-	call feedkeys(s:operator.inclusive_toggle.mode.s:direction)
-endfunction
 
-function! s:ninja_insert(mode)
+	" Reset the cursor position to where it was before the motion/text object
+	call setpos('.', s:curpos)
+
+	if a:direction == ']'
+		call setpos("'[", getpos("."))
+
+		if a:mode == 'char'
+			let inclusive_toggle = 'v'
+		endif
+	else
+		call setpos("']", getpos("."))
+	endif
+
+	" c and ! are the only operators that require additional input after
+	" selecting the motion/text object, which makes it hard to repeat them
+	if a:operator == 'c' || a:operator == '!'
+		" TODO: Fix repeating c and ! operators
+		call feedkeys(reg.a:operator.inclusive_toggle.mode.a:direction)
+	elseif a:operator == 'g@'
+		call call(a:opfunc, [a:mode])
+	else
+		exec "normal" reg.a:operator.inclusive_toggle.mode.a:direction
+	endif
+endfun
+
+fun! s:ninja_insert(mode)
 	let op = a:mode == 'line' ? 'O' : 'i'
 	call feedkeys('`['.op, 'n')
-endfunction
+endfun
 
-function! s:ninja_append(mode)
+fun! s:ninja_append(mode)
 	let op = a:mode == 'line' ? 'o' : 'a'
 	call feedkeys('`]'.op, 'n')
-endfunction
+endfun
 
-function! s:map_expr(sid, type, direction, count)
-	let map = ''
-	let map .= "\<Esc>"
-	let map .= ":\<C-U>call ".a:sid."ninja_prepare('".a:type."', '".a:direction."', '".a:count."')\<CR>"
-	let map .= ":\<C-U>set operatorfunc=".a:sid."ninja_strike\<CR>g@"
-	return map
-endfunction
+fun! s:map_expr(direction, type, opfunc)
+	" opfunc is passed as an argument since locally-scoped variables seem to
+	" have issues in partial functions
+	set opfunc=funcref('s:ninja_strike',[a:direction,v:operator,a:opfunc])
+	return "\<Esc>\"".v:register."g@".v:count1.a:type
+endfun
 
-function! s:map(lhs, rhs, mode)
+fun! s:map(lhs, rhs, mode)
 	if !hasmapto(a:rhs, a:mode)
 		execute a:mode.'map '.a:lhs.' '.a:rhs
 	endif
-endfunction
+endfun
 
-onoremap <silent> <expr> <Plug>(ninja-left-foot)        <SID>map_expr("<SID>", '', '[', v:count1)
-onoremap <silent> <expr> <Plug>(ninja-left-foot-inner)  <SID>map_expr("<SID>", 'i', '[', v:count1)
-onoremap <silent> <expr> <Plug>(ninja-left-foot-a)      <SID>map_expr("<SID>", 'a', '[', v:count1)
-onoremap <silent> <expr> <Plug>(ninja-right-foot)       <SID>map_expr("<SID>", '', ']', v:count1)
-onoremap <silent> <expr> <Plug>(ninja-right-foot-inner) <SID>map_expr("<SID>", 'i', ']', v:count1)
-onoremap <silent> <expr> <Plug>(ninja-right-foot-a)     <SID>map_expr("<SID>", 'a', ']', v:count1)
+onoremap <expr> <Plug>(ninja-left-foot)        <SID>map_expr('[', '',  &opfunc)
+onoremap <expr> <Plug>(ninja-left-foot-inner)  <SID>map_expr('[', 'i', &opfunc)
+onoremap <expr> <Plug>(ninja-left-foot-a)      <SID>map_expr('[', 'a', &opfunc)
+onoremap <expr> <Plug>(ninja-right-foot)       <SID>map_expr(']', '',  &opfunc)
+onoremap <expr> <Plug>(ninja-right-foot-inner) <SID>map_expr(']', 'i', &opfunc)
+onoremap <expr> <Plug>(ninja-right-foot-a)     <SID>map_expr(']', 'a', &opfunc)
 
-nnoremap <silent> <Plug>(ninja-insert) :<C-U>set operatorfunc=<SID>ninja_insert<CR>g@
-nnoremap <silent> <Plug>(ninja-append) :<C-U>set operatorfunc=<SID>ninja_append<CR>g@
+nnoremap <Plug>(ninja-insert) <Cmd>set operatorfunc=<SID>ninja_insert<CR>g@
+nnoremap <Plug>(ninja-append) <Cmd>set operatorfunc=<SID>ninja_append<CR>g@
 
-if !exists('g:ninja_feet_no_mappings')
+if !get(g:, 'ninja_feet_no_mappings', 0)
 	call s:map('[i', "<Plug>(ninja-left-foot-inner)", 'o')
 	call s:map('[a', "<Plug>(ninja-left-foot-a)", 'o')
 	call s:map(']i', "<Plug>(ninja-right-foot-inner)", 'o')
